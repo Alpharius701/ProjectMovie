@@ -10,14 +10,9 @@ using ProjectMovie.Models;
 
 namespace ProjectMovie.Controllers
 {
-    public class MoviesController : Controller
+    public class MoviesController(ProjectMovieContext context) : Controller
     {
-        private readonly ProjectMovieContext _context;
-
-        public MoviesController(ProjectMovieContext context)
-        {
-            _context = context;
-        }
+        private readonly ProjectMovieContext _context = context;
 
         // GET: Movies
         public async Task<IActionResult> Index(string movieGenre, string searchString)
@@ -77,7 +72,7 @@ namespace ProjectMovie.Controllers
         }
 
         // POST: Movies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // To protect from over-posting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -85,7 +80,7 @@ namespace ProjectMovie.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
+                await _context.AddAsync(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -109,7 +104,7 @@ namespace ProjectMovie.Controllers
         }
 
         // POST: Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // To protect from over-posting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -127,16 +122,9 @@ namespace ProjectMovie.Controllers
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException) when (!MovieExists(movie.Id))
                 {
-                    if (!MovieExists(movie.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -146,19 +134,7 @@ namespace ProjectMovie.Controllers
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movie = await _context.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
+            return await Details(id);
         }
 
         // POST: Movies/Delete/5
