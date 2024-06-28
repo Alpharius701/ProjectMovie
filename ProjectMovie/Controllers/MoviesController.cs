@@ -28,12 +28,12 @@ namespace ProjectMovie.Controllers
                 .Select(m => m.Genre);
             var movies = _context.Movie.Select(m => m);
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
                 movies = movies.Where(s => s.Title!.Contains(searchString));
             }
 
-            if (!string.IsNullOrEmpty(movieGenre))
+            if (!string.IsNullOrWhiteSpace(movieGenre))
             {
                 movies = movies.Where(x => x.Genre == movieGenre);
             }
@@ -76,7 +76,7 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Rating")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -108,7 +108,7 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Rating")] Movie movie)
         {
             if (id != movie.Id)
             {
