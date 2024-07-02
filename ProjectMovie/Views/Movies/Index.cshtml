@@ -22,6 +22,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.Movies![0].Title)
             </th>
@@ -41,6 +42,9 @@
         @foreach (var item in Model.Movies!)
         {
         <tr>
+            <td>
+                <img decoding="async" src="@("~/Posters/" + item.PosterName)" asp-append-version="true" width="250px" height="375px" alt="Poster" />
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>

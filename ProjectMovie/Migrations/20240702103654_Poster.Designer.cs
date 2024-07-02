@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectMovie.Data;
 
@@ -11,9 +12,11 @@ using ProjectMovie.Data;
 namespace ProjectMovie.Migrations
 {
     [DbContext(typeof(ProjectMovieContext))]
-    partial class ProjectMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20240702103654_Poster")]
+    partial class Poster
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +38,7 @@ namespace ProjectMovie.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("PosterName")
+                    b.Property<string>("PosterPath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rating")
