@@ -34,7 +34,7 @@ public static class SeedData
                     ReleaseDate = DateTime.Parse("1984-3-13"),
                     Genre = "Comedy",
                     Rating = "R",
-                    PosterName = "ghostbuster_poster.jpg"
+                    PosterFileName = "ghostbuster_poster.jpg"
                 },
                 new Movie
                 {

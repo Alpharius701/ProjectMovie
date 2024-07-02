@@ -78,7 +78,7 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Rating,PosterName,PosterFormFile")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Rating,PosterFileName,PosterFormFile")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace ProjectMovie.Controllers
                 string wwwwRootPath = _hostEnvironment.WebRootPath;
                 string filename = Path.GetFileNameWithoutExtension(movie.PosterFormFile!.FileName);
                 string extension = Path.GetExtension(movie.PosterFormFile.FileName);
-                movie.PosterName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                movie.PosterFileName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
                 string path = Path.Combine(wwwwRootPath, "Posters", filename);
 
                 await using (FileStream fileStream = new(path, FileMode.Create))
@@ -123,7 +123,7 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Rating,PosterName,PosterFormFile")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Rating,PosterFileName,PosterFormFile")] Movie movie)
         {
             if (id != movie.Id)
             {
@@ -135,7 +135,7 @@ namespace ProjectMovie.Controllers
                 try
                 {
                     // Delete poster image
-                    string posterPath = Path.Combine(_hostEnvironment.WebRootPath, "Posters", movie.PosterName!);
+                    string posterPath = Path.Combine(_hostEnvironment.WebRootPath, "Posters", movie.PosterFileName!);
                     if (System.IO.File.Exists(posterPath))
                         System.IO.File.Delete(posterPath);
 
@@ -143,7 +143,7 @@ namespace ProjectMovie.Controllers
                     string wwwwRootPath = _hostEnvironment.WebRootPath;
                     string filename = Path.GetFileNameWithoutExtension(movie.PosterFormFile!.FileName);
                     string extension = Path.GetExtension(movie.PosterFormFile.FileName);
-                    movie.PosterName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                    movie.PosterFileName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
                     string path = Path.Combine(wwwwRootPath, "Posters", filename);
 
                     await using (FileStream fileStream = new(path, FileMode.Create))
@@ -179,7 +179,7 @@ namespace ProjectMovie.Controllers
             if (movie != null)
             {
                 // Delete poster image
-                string posterPath = Path.Combine(_hostEnvironment.WebRootPath, "Posters", movie.PosterName!);
+                string posterPath = Path.Combine(_hostEnvironment.WebRootPath, "Posters", movie.PosterFileName!);
                 if (System.IO.File.Exists(posterPath))
                     System.IO.File.Delete(posterPath);
 

@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <img decoding="async" src="@("~/Posters/" + Model.PosterName)" asp-append-version="true" width="250px" height="375px" alt="Poster" />
+        <img decoding="async" src="@("~/Posters/" + Model.PosterFileName)" asp-append-version="true" width="250px" height="375px" alt="Poster" />
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />

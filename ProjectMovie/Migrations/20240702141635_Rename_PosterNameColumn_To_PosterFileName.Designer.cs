@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectMovie.Data;
 
@@ -11,9 +12,11 @@ using ProjectMovie.Data;
 namespace ProjectMovie.Migrations
 {
     [DbContext(typeof(ProjectMovieContext))]
-    partial class ProjectMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20240702141635_Rename_PosterNameColumn_To_PosterFileName")]
+    partial class Rename_PosterNameColumn_To_PosterFileName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
