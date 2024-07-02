@@ -22,6 +22,7 @@ namespace ProjectMovie.Models
         [Required]
         public string? Rating { get; set; }
         [DisplayName("Poster")]
+        [Required]
         public string? PosterFileName { get; set; }
         [NotMapped]
         [DisplayName("Upload poster image")]
