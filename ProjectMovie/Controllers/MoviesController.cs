@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectMovie.Data;
@@ -10,9 +11,10 @@ using ProjectMovie.Models;
 
 namespace ProjectMovie.Controllers
 {
-    public class MoviesController(ProjectMovieContext context) : Controller
+    public class MoviesController(ProjectMovieContext context, IWebHostEnvironment hostEnvironment) : Controller
     {
         private readonly ProjectMovieContext _context = context;
+        private readonly IWebHostEnvironment _hostEnvironment = hostEnvironment;
 
         // GET: Movies
         public async Task<IActionResult> Index(string movieGenre, string searchString)
@@ -76,10 +78,23 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Rating")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Rating,PosterName,PosterFormFile")] Movie movie)
         {
             if (ModelState.IsValid)
             {
+                // Save poster image to wwwroot/Posters
+                string wwwwRootPath = _hostEnvironment.WebRootPath;
+                string filename = Path.GetFileNameWithoutExtension(movie.PosterFormFile!.FileName);
+                string extension = Path.GetExtension(movie.PosterFormFile.FileName);
+                movie.PosterName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                string path = Path.Combine(wwwwRootPath, "Posters", filename);
+
+                await using (FileStream fileStream = new(path, FileMode.Create))
+                {
+                    await movie.PosterFormFile.CopyToAsync(fileStream);
+                }
+
+                // Insert record
                 await _context.AddAsync(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -108,7 +123,7 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Rating,PosterName,PosterFormFile")] Movie movie)
         {
             if (id != movie.Id)
             {
@@ -119,6 +134,24 @@ namespace ProjectMovie.Controllers
             {
                 try
                 {
+                    // Delete poster image
+                    string posterPath = Path.Combine(_hostEnvironment.WebRootPath, "Posters", movie.PosterName!);
+                    if (System.IO.File.Exists(posterPath))
+                        System.IO.File.Delete(posterPath);
+
+                    // Save poster image
+                    string wwwwRootPath = _hostEnvironment.WebRootPath;
+                    string filename = Path.GetFileNameWithoutExtension(movie.PosterFormFile!.FileName);
+                    string extension = Path.GetExtension(movie.PosterFormFile.FileName);
+                    movie.PosterName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                    string path = Path.Combine(wwwwRootPath, "Posters", filename);
+
+                    await using (FileStream fileStream = new(path, FileMode.Create))
+                    {
+                        await movie.PosterFormFile.CopyToAsync(fileStream);
+                    }
+
+                    // Update the record
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
@@ -145,6 +178,12 @@ namespace ProjectMovie.Controllers
             var movie = await _context.Movie.FindAsync(id);
             if (movie != null)
             {
+                // Delete poster image
+                string posterPath = Path.Combine(_hostEnvironment.WebRootPath, "Posters", movie.PosterName!);
+                if (System.IO.File.Exists(posterPath))
+                    System.IO.File.Delete(posterPath);
+
+                // Delete the record
                 _context.Movie.Remove(movie);
             }
 
