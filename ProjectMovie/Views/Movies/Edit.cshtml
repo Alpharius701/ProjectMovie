@@ -10,9 +10,15 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <img decoding="async" src="@("~/Posters/" + Model.PosterName)" asp-append-version="true" width="250px" height="375px" alt="Poster" />
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="PosterFormFile" class="control-label"></label>
+                <input asp-for="PosterFormFile" accept="image/*" />
+                <span asp-validation-for="PosterFormFile" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />

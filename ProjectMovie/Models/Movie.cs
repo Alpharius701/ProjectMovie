@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace ProjectMovie.Models
 {
@@ -20,5 +21,10 @@ namespace ProjectMovie.Models
         [StringLength(5)]
         [Required]
         public string? Rating { get; set; }
+        [DisplayName("Poster")]
+        public string? PosterName { get; set; }
+        [NotMapped]
+        [DisplayName("Upload poster image")]
+        public IFormFile? PosterFormFile { get; set; }
     }
 }
