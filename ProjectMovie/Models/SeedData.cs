@@ -21,39 +21,46 @@ public static class SeedData
             return;   // DB has been seeded
         }
         context.Movie.AddRange(
-            new Movie
-            {
-                Title = "When Harry Met Sally",
-                ReleaseDate = DateTime.Parse("1989-2-12", new CultureInfo("ru-RU")),
-                Genre = "Romantic Comedy",
-                Rating = "R",
-                PosterFileName = "WhenHarryMetSally.jpg"
-            },
-            new Movie
-            {
-                Title = "Ghostbusters",
-                ReleaseDate = DateTime.Parse("1984-3-13", new CultureInfo("ru-RU")),
-                Genre = "Comedy",
-                Rating = "R",
-                PosterFileName = "ghostbuster_poster.jpg"
-            },
-            new Movie
-            {
-                Title = "Ghostbusters 2",
-                ReleaseDate = DateTime.Parse("1986-2-23", new CultureInfo("ru-RU")),
-                Genre = "Comedy",
-                Rating = "R",
-                PosterFileName = "Ghostbusters2.jpg"
-            },
-            new Movie
-            {
-                Title = "Rio Bravo",
-                ReleaseDate = DateTime.Parse("1959-4-15", new CultureInfo("ru-RU")),
-                Genre = "Western",
-                Rating = "R",
-                PosterFileName = "RioBravo.jpg"
-            }
+            CreateNewMovieEntity(title: "When Harry Met Sally",
+                                 releaseDate: "1989-2-12",
+                                 genre: "Romantic Comedy",
+                                 rating: "R",
+                                 posterFileName: "WhenHarryMetSally.jpg"),
+
+            CreateNewMovieEntity(title: "Ghostbusters",
+                                 releaseDate: "1984-3-13",
+                                 genre: "Comedy",
+                                 rating: "R",
+                                 posterFileName: "ghostbuster_poster.jpg"),
+
+            CreateNewMovieEntity(title: "Ghostbusters 2",
+                                 releaseDate: "1986-2-23",
+                                 genre: "Comedy",
+                                 rating: "R",
+                                 posterFileName: "Ghostbusters2.jpg"),
+
+            CreateNewMovieEntity(title: "Rio Bravo",
+                                 releaseDate: "1959-4-15",
+                                 genre: "Western",
+                                 rating: "R",
+                                 posterFileName: "RioBravo.jpg")
         );
         context.SaveChanges();
+    }
+
+    private static Movie CreateNewMovieEntity(string title,
+                                string releaseDate,
+                                string genre,
+                                string rating,
+                                string posterFileName)
+    {
+        return new Movie
+        {
+            Title = title,
+            ReleaseDate = DateTime.Parse(releaseDate, new CultureInfo("ru-RU")),
+            Genre = genre,
+            Rating = rating,
+            PosterFileName = posterFileName
+        };
     }
 }
