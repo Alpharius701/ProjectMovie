@@ -19,12 +19,13 @@ namespace ProjectMovie.Controllers
 
         // GET: Movies
         public async Task<IActionResult> Index(string movieGenre,
+                                               string movieReleaseDate,
+                                               string movieRating,
                                                string title,
-                                               int movie = 0,
                                                int page = 1,
                                                SortState sortOrder = SortState.TitleAsc)
         {
-            int pageSize = 2;
+            const int PageSize = 2;
 
             if (_context.Movie == null)
             {
@@ -36,25 +37,28 @@ namespace ProjectMovie.Controllers
                 .OrderBy(m => m.Genre)
                 .Select(m => m.Genre);
             var releaseDateQuery = _context.Movie
-                .OrderBy(m => m.ReleaseDate)
-                .Select(m => m.ReleaseDate);
+                .OrderBy(m => m.ReleaseDate.Year)
+                .Select(m => m.ReleaseDate.Year);
             var ratingQuery = _context.Movie
                 .OrderBy(m => m.Rating)
                 .Select(m => m.Rating);
             var movies = _context.Movie.Select(m => m);
 
-            if (movie != 0)
-            {
-                movies = movies.Where(s => s.Id == movie);
-            }
             if (!string.IsNullOrWhiteSpace(title))
             {
                 movies = movies.Where(s => s.Title!.Contains(title));
             }
-
             if (!string.IsNullOrWhiteSpace(movieGenre))
             {
                 movies = movies.Where(x => x.Genre == movieGenre);
+            }
+            if (!string.IsNullOrWhiteSpace(movieReleaseDate))
+            {
+                movies = movies.Where(x => x.ReleaseDate.ToString().Contains(movieReleaseDate));
+            }
+            if (!string.IsNullOrWhiteSpace(movieRating))
+            {
+                movies = movies.Where(x => x.Rating == movieRating);
             }
 
             // Sorting
@@ -72,18 +76,17 @@ namespace ProjectMovie.Controllers
 
             // Pagination
             var count = await movies.CountAsync();
-            var items = await movies.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = await movies.Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
 
             // Forming a presentation model
             IndexViewModel viewModel = new(
                     items,
-                    new PageViewModel(count, page, pageSize),
+                    new PageViewModel(count, page, PageSize),
                     new FilterViewModel
                     {
                         Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
                         ReleaseDates = new SelectList(await releaseDateQuery.Distinct().ToListAsync()),
                         Ratings = new SelectList(await ratingQuery.Distinct().ToListAsync()),
-                        SelectedMovie = movie,
                         SelectedTitle = title
                     },
                     new SortViewModel(sortOrder)

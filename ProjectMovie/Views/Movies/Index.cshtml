@@ -17,9 +17,20 @@
             <option value="">All</option>
         </select>
 
-        Find by title: <input type="text" name="name" asp-for="@Model.FilterViewModel.SelectedTitle" />
+        Release Year: <select name="movieReleaseDate" asp-items="Model.FilterViewModel.ReleaseDates">
+            <option value="">All</option>
+        </select>
+
+        Rating: <select name="movieRating" asp-items="Model.FilterViewModel.Ratings">
+            <option value="">All</option>
+        </select>
+
+        Find by title: <input type="text" name="title" value="@Model.FilterViewModel.SelectedTitle" />
         <button type="submit" class="btn btn btn-secondary">Search</button>
     </p>
+</form>
+<form asp-controller="Movies" asp-action="Index">
+    <input type="submit" value="Back to Full List" class="btn btn-dark" />
 </form>
 <table class="table">
     <thead>
@@ -28,26 +39,22 @@
             <th>
                 <a asp-action="Index"
                    asp-route-sortOrder="@(Model.SortViewModel.TitleSort)"
-                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
-                   asp-route-movie="@(Model.FilterViewModel.SelectedMovie)">Title</a>
+                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Title</a>
             </th>
             <th>
                 <a asp-action="Index"
                    asp-route-sortOrder="@(Model.SortViewModel.ReleaseDateSort)"
-                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
-                   asp-route-movie="@(Model.FilterViewModel.SelectedMovie)">Release Date</a>
+                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Release Date</a>
             </th>
             <th>
                 <a asp-action="Index"
                    asp-route-sortOrder="@(Model.SortViewModel.GenreSort)"
-                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
-                   asp-route-movie="@(Model.FilterViewModel.SelectedMovie)">Genre</a>
+                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Genre</a>
             </th>
             <th>
                 <a asp-action="Index"
                    asp-route-sortOrder="@(Model.SortViewModel.RatingSort)"
-                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
-                   asp-route-movie="@(Model.FilterViewModel.SelectedMovie)">Rating</a>
+                   asp-route-title="@(Model.FilterViewModel.SelectedTitle)">Rating</a>
             </th>
             <th></th>
         </tr>
@@ -57,7 +64,7 @@
         {
         <tr>
             <td>
-                <img decoding="async" src="@("~/Posters/" + item.PosterFileName)" asp-append-version="true" width="250px" height="375px" alt="Poster" />
+                <img decoding="async" src="@("~/Posters/" + item.PosterFileName)" asp-append-version="true" width="250px" height="375px" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -85,10 +92,9 @@
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
-           asp-route-company="@(Model.FilterViewModel.SelectedMovie)"
+           asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
            asp-route-sortorder="@(Model.SortViewModel.Current)"
-           class="glyphicon glyphicon-chevron-left">
+           class="btn btn-info">
             Previous
         </a>
     }
@@ -96,10 +102,9 @@
     {
         <a asp-action="Index"
            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           asp-route-name="@(Model.FilterViewModel.SelectedTitle)"
-           asp-route-company="@(Model.FilterViewModel.SelectedMovie)"
+           asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
            asp-route-sortorder="@(Model.SortViewModel.Current)"
-           class="glyphicon glyphicon-chevron-right">
+           class="btn btn-info">
             Next
         </a>
     }
