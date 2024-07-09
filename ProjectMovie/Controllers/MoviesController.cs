@@ -25,8 +25,6 @@ namespace ProjectMovie.Controllers
                                                int page = 1,
                                                SortState sortOrder = SortState.TitleAsc)
         {
-            const int PageSize = 2;
-
             if (_context.Movie == null)
             {
                 return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
@@ -75,6 +73,7 @@ namespace ProjectMovie.Controllers
             };
 
             // Pagination
+            const int PageSize = 2;
             var count = await movies.CountAsync();
             var items = await movies.Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
 

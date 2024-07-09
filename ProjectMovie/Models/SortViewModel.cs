@@ -15,13 +15,13 @@
 
     public enum SortState
     {
-        TitleAsc,    // по имени по возрастанию
-        TitleDesc,   // по имени по убыванию
-        RatingAsc, // по возрасту по возрастанию
-        RatingDesc,    // по возрасту по убыванию
-        ReleaseDateAsc, // по компании по возрастанию
-        ReleaseDateDesc, // по компании по убыванию
-        GenreAsc,
-        GenreDesc,
+        TitleAsc,    // by title ascending
+        TitleDesc,   // by title descending
+        RatingAsc,    // by rating ascending
+        RatingDesc,    // by rating descending
+        ReleaseDateAsc,    // by release date ascending
+        ReleaseDateDesc,   // by release date descending
+        GenreAsc,    // by genre ascending
+        GenreDesc,    // by genre descending
     }
 }
