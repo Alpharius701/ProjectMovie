@@ -11,42 +11,87 @@ using ProjectMovie.Models;
 
 namespace ProjectMovie.Controllers
 {
-    public class MoviesController(ProjectMovieContext context, IWebHostEnvironment hostEnvironment) : Controller
+    public class MoviesController(ProjectMovieContext context,
+                                  IWebHostEnvironment hostEnvironment) : Controller
     {
         private readonly ProjectMovieContext _context = context;
         private readonly IWebHostEnvironment _hostEnvironment = hostEnvironment;
 
         // GET: Movies
-        public async Task<IActionResult> Index(string movieGenre, string searchString)
+        public async Task<IActionResult> Index(string movieGenre,
+                                               string movieReleaseDate,
+                                               string movieRating,
+                                               string title,
+                                               int page = 1,
+                                               SortState sortOrder = SortState.TitleAsc)
         {
             if (_context.Movie == null)
             {
                 return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
             }
 
-            // Use LINQ to get list of genres.
+            // Filtration
             var genreQuery = _context.Movie
                 .OrderBy(m => m.Genre)
                 .Select(m => m.Genre);
+            var releaseDateQuery = _context.Movie
+                .OrderBy(m => m.ReleaseDate.Year)
+                .Select(m => m.ReleaseDate.Year);
+            var ratingQuery = _context.Movie
+                .OrderBy(m => m.Rating)
+                .Select(m => m.Rating);
             var movies = _context.Movie.Select(m => m);
 
-            if (!string.IsNullOrWhiteSpace(searchString))
+            if (!string.IsNullOrWhiteSpace(title))
             {
-                movies = movies.Where(s => s.Title!.Contains(searchString));
+                movies = movies.Where(s => s.Title!.Contains(title));
             }
-
             if (!string.IsNullOrWhiteSpace(movieGenre))
             {
                 movies = movies.Where(x => x.Genre == movieGenre);
             }
-
-            var movieGenreVM = new MovieGenreViewModel
+            if (!string.IsNullOrWhiteSpace(movieReleaseDate))
             {
-                Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
-                Movies = await movies.ToListAsync()
+                movies = movies.Where(x => x.ReleaseDate.ToString().Contains(movieReleaseDate));
+            }
+            if (!string.IsNullOrWhiteSpace(movieRating))
+            {
+                movies = movies.Where(x => x.Rating == movieRating);
+            }
+
+            // Sorting
+            movies = sortOrder switch
+            {
+                SortState.TitleDesc => movies.OrderByDescending(s => s.Title),
+                SortState.RatingAsc => movies.OrderBy(s => s.Rating),
+                SortState.RatingDesc => movies.OrderByDescending(s => s.Rating),
+                SortState.ReleaseDateAsc => movies.OrderBy(s => s.ReleaseDate),
+                SortState.ReleaseDateDesc => movies.OrderByDescending(s => s.ReleaseDate),
+                SortState.GenreAsc => movies.OrderBy(s => s.Genre),
+                SortState.GenreDesc => movies.OrderByDescending(s => s.Genre),
+                _ => movies.OrderBy(s => s.Title)
             };
 
-            return View(movieGenreVM);
+            // Pagination
+            const int PageSize = 2;
+            var count = await movies.CountAsync();
+            var items = await movies.Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
+
+            // Forming a presentation model
+            IndexViewModel viewModel = new(
+                    items,
+                    new PageViewModel(count, page, PageSize),
+                    new FilterViewModel
+                    {
+                        Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
+                        ReleaseDates = new SelectList(await releaseDateQuery.Distinct().ToListAsync()),
+                        Ratings = new SelectList(await ratingQuery.Distinct().ToListAsync()),
+                        SelectedTitle = title
+                    },
+                    new SortViewModel(sortOrder)
+                );
+
+            return View(viewModel);
         }
 
         // GET: Movies/Details/5
