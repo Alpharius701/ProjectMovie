@@ -28,10 +28,10 @@ public static class SeedData
                                  posterFileName: "WhenHarryMetSally.jpg"),
 
             CreateNewMovieEntity(title: "Ghostbusters",
-                                 releaseDate: "1984-3-13",
+                                 releaseDate: "1984-6-8",
                                  genre: "Comedy",
                                  rating: "R",
-                                 posterFileName: "ghostbuster_poster.jpg"),
+                                 posterFileName: "Ghostbuster.jpg"),
 
             CreateNewMovieEntity(title: "Ghostbusters 2",
                                  releaseDate: "1986-2-23",

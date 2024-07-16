@@ -179,12 +179,13 @@ namespace ProjectMovie.Controllers
             {
                 try
                 {
-                    // Delete poster image
-                    string posterPath = Path.Combine(_hostEnvironment.WebRootPath, "Posters", movie.PosterFileName!);
-                    if (System.IO.File.Exists(posterPath))
-                        System.IO.File.Delete(posterPath);
+                    // Save path of old poster image
+                    string posterPath = Path.Combine(
+                        _hostEnvironment.WebRootPath,
+                        "Posters",
+                        _context.Movie.Where(m => m.Id == id).Select(m => m.PosterFormFile).ToString()!);
 
-                    // Save poster image
+                    // Save new poster image
                     string wwwwRootPath = _hostEnvironment.WebRootPath;
                     string filename = Path.GetFileNameWithoutExtension(movie.PosterFormFile!.FileName);
                     string extension = Path.GetExtension(movie.PosterFormFile.FileName);
@@ -199,6 +200,10 @@ namespace ProjectMovie.Controllers
                     // Update the record
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
+
+                    // Delete old poster image
+                    if (System.IO.File.Exists(posterPath))
+                        System.IO.File.Delete(posterPath);
                 }
                 catch (DbUpdateConcurrencyException) when (!MovieExists(movie.Id))
                 {
