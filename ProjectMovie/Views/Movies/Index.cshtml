@@ -27,6 +27,18 @@
             <option value="">All</option>
         </select>
 
+        Sort:
+        <select asp-controller="Movies" asp-action="Index" name="sortOrder">
+            <option value="@SortState.TitleAsc">by title ascending</option>
+            <option value="@SortState.TitleDesc">by title descending</option>
+            <option value="@SortState.RatingAsc">by rating ascending</option>
+            <option value="@SortState.RatingDesc">by rating descending</option>
+            <option value="@SortState.ReleaseDateAsc">by release date ascending</option>
+            <option value="@SortState.ReleaseDateDesc">by release date descending</option>
+            <option value="@SortState.GenreAsc">by genre ascending</option>
+            <option value="@SortState.GenreDesc">by genre descending</option>
+        </select>
+
         Find by title: <input type="text" name="title" value="@Model.FilterViewModel.SelectedTitle" />
         <button type="submit" class="btn btn btn-secondary">Search</button>
     </p>

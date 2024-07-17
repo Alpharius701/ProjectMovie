@@ -13,12 +13,12 @@ namespace ProjectMovie.Models
         [Display(Name = "Release Date")]
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }
-        [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z\s-]*$")]
         [Required]
         [StringLength(30)]
         public string? Genre { get; set; }
         [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$")]
-        [StringLength(5)]
+        [StringLength(7)]
         [Required]
         public string? Rating { get; set; }
         [DisplayName("Poster")]

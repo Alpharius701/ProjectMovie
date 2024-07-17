@@ -73,7 +73,7 @@ namespace ProjectMovie.Controllers
             };
 
             // Pagination
-            const int PageSize = 2;
+            const int PageSize = 8;
             var count = await movies.CountAsync();
             var items = await movies.Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
 
