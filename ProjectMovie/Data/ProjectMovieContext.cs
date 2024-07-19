@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectMovie.Models;
 
 namespace ProjectMovie.Data
 {
-    public class ProjectMovieContext : DbContext
+    public class ProjectMovieContext : IdentityDbContext
     {
-        public ProjectMovieContext (DbContextOptions<ProjectMovieContext> options)
+        public ProjectMovieContext(DbContextOptions<ProjectMovieContext> options)
             : base(options)
         {
         }
