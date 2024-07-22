@@ -33,28 +33,28 @@ builder.Services.Configure<IdentityOptions>(options =>
     // User setting.
     options.User.AllowedUserNameCharacters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = false;
+    options.User.RequireUniqueEmail = true;
 
     // SignIn settings.
-    options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
 });
-
-// Cookie authentication
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => builder.Configuration.Bind("CookieSettings", options));
-builder.Services.AddAuthorization();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
+    options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.Cookie.Name = "ProjectMovieCookie";
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    options.LoginPath = "/Identity/Account/Login";
     options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
     options.SlidingExpiration = true;
 });
+
+// Force Identity's security stamp to be validated every minute.
+builder.Services.Configure<SecurityStampValidatorOptions>(o =>
+                   o.ValidationInterval = TimeSpan.FromMinutes(1));
 
 var app = builder.Build();
 
