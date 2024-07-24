@@ -1,3 +1,7 @@
 ﻿@using ProjectMovie
 @using ProjectMovie.Models
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Identity
+@addTagHelper Identity.TagHelpers.*, Identity
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService

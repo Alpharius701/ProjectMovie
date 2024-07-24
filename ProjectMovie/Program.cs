@@ -5,15 +5,21 @@ using MvcMovie.Models;
 using ProjectMovie.Data;
 using ProjectMovie.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ProjectMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectMovieContext") ?? throw new InvalidOperationException("Connection string 'ProjectMovieContext' not found.")));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ProjectMovieContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("RequireSuperAdminRole", policy => policy.RequireRole("SuperAdmin"))
+    .AddPolicy("RequireAdministratorsRole", policy => policy.RequireRole("SuperAdmin", "Administrator"));
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

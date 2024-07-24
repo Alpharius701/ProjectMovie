@@ -8,13 +8,8 @@ using ProjectMovie.Models;
 
 namespace ProjectMovie.Data
 {
-    public class ProjectMovieContext : IdentityDbContext
+    public class ProjectMovieContext(DbContextOptions<ProjectMovieContext> options) : IdentityDbContext(options)
     {
-        public ProjectMovieContext(DbContextOptions<ProjectMovieContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<ProjectMovie.Models.Movie> Movie { get; set; } = default!;
     }
 }
