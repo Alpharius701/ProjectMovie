@@ -6,7 +6,13 @@ using ProjectMovie.Data;
 using ProjectMovie.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using ProjectMovie.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 builder.Services.AddDbContext<ProjectMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectMovieContext") ?? throw new InvalidOperationException("Connection string 'ProjectMovieContext' not found.")));
 
@@ -42,7 +48,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 
     // SignIn settings.
-    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedEmail = true;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 });
 
