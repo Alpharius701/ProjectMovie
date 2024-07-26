@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
+using FileTypeChecker.Web.Attributes;
 
 namespace ProjectMovie.Models
 {
@@ -25,6 +27,8 @@ namespace ProjectMovie.Models
         public string? PosterFileName { get; set; }
         [NotMapped]
         [DisplayName("Upload poster image")]
+        [AllowImages]
+        [ForbidExecutables]
         [Required]
         public IFormFile? PosterFormFile { get; set; }
     }

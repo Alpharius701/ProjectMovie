@@ -121,6 +121,7 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "SuperAdmin,Administrator")]
         [HttpPost]
+        [RequestSizeLimit(10_000_000)] // Checking for 10 MB
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Rating,PosterFileName,PosterFormFile")] Movie movie)
         {
@@ -130,7 +131,7 @@ namespace ProjectMovie.Controllers
                 string wwwwRootPath = _hostEnvironment.WebRootPath;
                 string filename = Path.GetFileNameWithoutExtension(movie.PosterFormFile!.FileName);
                 string extension = Path.GetExtension(movie.PosterFormFile.FileName);
-                movie.PosterFileName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                movie.PosterFileName = filename = filename + Guid.NewGuid() + extension;
                 string path = Path.Combine(wwwwRootPath, "Posters", filename);
 
                 await using (FileStream fileStream = new(path, FileMode.Create))
@@ -168,6 +169,7 @@ namespace ProjectMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "SuperAdmin,Administrator")]
         [HttpPost]
+        [RequestSizeLimit(10_000_000)] // Checking for 10 MB
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Rating,PosterFileName,PosterFormFile")] Movie movie)
         {
@@ -190,7 +192,7 @@ namespace ProjectMovie.Controllers
                     string wwwwRootPath = _hostEnvironment.WebRootPath;
                     string filename = Path.GetFileNameWithoutExtension(movie.PosterFormFile!.FileName);
                     string extension = Path.GetExtension(movie.PosterFormFile.FileName);
-                    movie.PosterFileName = filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                    movie.PosterFileName = filename = filename + Guid.NewGuid() + extension;
                     string path = Path.Combine(wwwwRootPath, "Posters", filename);
 
                     await using (FileStream fileStream = new(path, FileMode.Create))
