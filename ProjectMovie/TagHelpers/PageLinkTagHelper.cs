@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using ProjectMovie.Models;
+using System.Data;
 
 namespace ProjectMovie.TagHelpers
 {
     public class PageLinkTagHelper(IUrlHelperFactory urlHelperFactory) : TagHelper
     {
-        private IUrlHelperFactory _urlHelperFactory = urlHelperFactory;
+        private readonly IUrlHelperFactory _urlHelperFactory = urlHelperFactory;
         [ViewContext]
         [HtmlAttributeNotBound]
         public ViewContext ViewContext { get; set; } = null!;
@@ -30,7 +31,11 @@ namespace ProjectMovie.TagHelpers
 
             // A set of links will be for the post ul
             TagBuilder tag = new("ul");
-            tag.AddCssClass("pagination");
+            tag.AddCssClass("pagination justify-content-center");
+
+            // Create a link to first page
+            TagBuilder firsItem = CreateTag("\u00AB", urlHelper);
+            tag.InnerHtml.AppendHtml(firsItem);
 
             // Create three links - to the current, previous and next
             TagBuilder currentItem = CreateTag(PageModel.PageNumber, urlHelper);
@@ -50,6 +55,10 @@ namespace ProjectMovie.TagHelpers
                 TagBuilder nextItem = CreateTag(PageModel.PageNumber + 1, urlHelper);
                 tag.InnerHtml.AppendHtml(nextItem);
             }
+
+            // Create a link to last page
+            TagBuilder lastItem = CreateTag("\u00BB", urlHelper);
+            tag.InnerHtml.AppendHtml(lastItem);
 
             output.Content.AppendHtml(tag);
         }
@@ -72,6 +81,26 @@ namespace ProjectMovie.TagHelpers
             item.AddCssClass("page-item");
             link.AddCssClass("page-link");
             link.InnerHtml.Append(pageNumber.ToString());
+            item.InnerHtml.AppendHtml(link);
+            return item;
+        }
+
+        TagBuilder CreateTag(string symbol, IUrlHelper urlHelper)
+        {
+            TagBuilder item = new("li");
+            TagBuilder link = new("a");
+
+            PageUrlValues["page"] = symbol switch
+            {
+                "\u00AB" => 1,
+                "\u00BB" => PageModel!.TotalPages,
+                _ => throw new ArgumentException("Unexpected valueю")
+            };
+            link.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
+
+            item.AddCssClass("page-item");
+            link.AddCssClass("page-link");
+            link.InnerHtml.Append(symbol);
             item.InnerHtml.AppendHtml(link);
             return item;
         }
