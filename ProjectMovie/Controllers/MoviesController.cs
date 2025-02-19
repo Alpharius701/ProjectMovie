@@ -14,7 +14,7 @@ namespace ProjectMovie.Controllers
         private readonly ProjectMovieContext _context = context;
         private readonly IWebHostEnvironment _hostEnvironment = hostEnvironment;
 
-        // GET: Movies
+        [HttpGet]
         public async Task<IActionResult> Index(string movieGenre,
                                                string movieReleaseDate,
                                                string movieRating,
@@ -91,7 +91,7 @@ namespace ProjectMovie.Controllers
             return View(viewModel);
         }
 
-        // GET: Movies/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -109,14 +109,13 @@ namespace ProjectMovie.Controllers
             return View(movie);
         }
 
-        // GET: Movies/Create
+        [HttpGet]
         [Authorize(Roles = "SuperAdmin,Administrator")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Movies/Create
         // To protect from over-posting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "SuperAdmin,Administrator")]
@@ -147,7 +146,7 @@ namespace ProjectMovie.Controllers
             return View(movie);
         }
 
-        // GET: Movies/Edit/5
+        [HttpGet]
         [Authorize(Roles = "SuperAdmin,Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -164,7 +163,6 @@ namespace ProjectMovie.Controllers
             return View(movie);
         }
 
-        // POST: Movies/Edit/5
         // To protect from over-posting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "SuperAdmin,Administrator")]
@@ -217,14 +215,13 @@ namespace ProjectMovie.Controllers
             return View(movie);
         }
 
-        // GET: Movies/Delete/5
+        [HttpGet]
         [Authorize(Roles = "SuperAdmin,Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             return await Details(id);
         }
 
-        // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "SuperAdmin,Administrator")]
         [ValidateAntiForgeryToken]

@@ -14,14 +14,17 @@ namespace ProjectMovie.Controllers
         private readonly RoleManager<IdentityRole> _roleManager = roleManager;
         private readonly UserManager<IdentityUser> _userManager = userManager;
 
+        [HttpGet]
         public ViewResult Index() => View(_roleManager.Roles);
 
+        [HttpGet]
         private void Errors(IdentityResult result)
         {
             foreach (IdentityError error in result.Errors)
                 ModelState.AddModelError("", error.Description);
         }
 
+        [HttpGet]
         public IActionResult Create() => View();
 
         [HttpPost]
@@ -62,6 +65,7 @@ namespace ProjectMovie.Controllers
             return View("Index", _roleManager.Roles);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Update(string id)
         {
             IdentityRole? role = await _roleManager.FindByIdAsync(id);

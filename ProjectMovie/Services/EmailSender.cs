@@ -11,8 +11,10 @@ namespace ProjectMovie.Services
         {
             const string Mail = "ProjectMovieWebApp@outlook.com";
             const string Password = "zuoeggdwwegiosgv";
+            const string Host = "smtp.office365.com";
+            const int Port = 587;
 
-            SmtpClient client = new("smtp.office365.com", 587)
+            SmtpClient client = new(Host, Port)
             {
                 EnableSsl = true,
                 UseDefaultCredentials = false,
@@ -22,8 +24,8 @@ namespace ProjectMovie.Services
             return client.SendMailAsync(
                 new MailMessage(from: Mail,
                                 to: email,
-                                subject,
-                                htmlMessage));
+                                subject: subject,
+                                body: htmlMessage));
         }
     }
 }

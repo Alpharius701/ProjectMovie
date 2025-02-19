@@ -34,8 +34,11 @@ namespace ProjectMovie.TagHelpers
             tag.AddCssClass("pagination justify-content-center");
 
             // Create a link to first page
-            TagBuilder firsItem = CreateTag("\u00AB", urlHelper);
-            tag.InnerHtml.AppendHtml(firsItem);
+            if (PageModel.TotalPages > 2)
+            {
+                TagBuilder firsItem = CreateTag("\u00AB", urlHelper);
+                tag.InnerHtml.AppendHtml(firsItem);
+            }
 
             // Create three links - to the current, previous and next
             TagBuilder currentItem = CreateTag(PageModel.PageNumber, urlHelper);
@@ -57,8 +60,11 @@ namespace ProjectMovie.TagHelpers
             }
 
             // Create a link to last page
-            TagBuilder lastItem = CreateTag("\u00BB", urlHelper);
-            tag.InnerHtml.AppendHtml(lastItem);
+            if (PageModel.TotalPages > 2)
+            {
+                TagBuilder lastItem = CreateTag("\u00BB", urlHelper);
+                tag.InnerHtml.AppendHtml(lastItem);
+            }
 
             output.Content.AppendHtml(tag);
         }
