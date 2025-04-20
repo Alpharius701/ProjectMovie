@@ -1,0 +1,40 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+
+@{
+    Layout = ViewData["ParentLayout"]?.ToString() ?? "/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Manage your account</h1>
+
+<div>
+    <h2>Change your account settings</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" id="profile" href="@Url.Action("Profile", "Manage")">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="email" href="@Url.Action("ChangeEmail", "Manage")">Email</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="change-password" href="@Url.Action("ChangePassword", "Manage")">Password</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="two-factor" href="@Url.Action("TwoFactorAuthentication", "Manage")">Two-factor authentication</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="personal-data" href="@Url.Action("PersonalData", "Manage")">Personal data</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

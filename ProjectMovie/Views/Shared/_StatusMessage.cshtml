@@ -1,0 +1,16 @@
+﻿@{
+    string? statusMessage = ViewData["StatusMessage"]?.ToString();
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!String.IsNullOrEmpty(statusMessage))
+{
+    var statusMessageClass = statusMessage.StartsWith("Error") ? "danger" : "success";
+    <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @statusMessage
+    </div>
+}
+
+<a href="@Url.Action("Login", "Account")" class="btn btn-primary">Return to Login</a>

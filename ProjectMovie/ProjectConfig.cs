@@ -29,8 +29,12 @@ namespace ProjectMovie
             services.AddControllersWithViews();
 
             services.AddAuthorizationBuilder()
-                .AddPolicy("RequireSuperAdminRole", policy => policy.RequireRole("SuperAdmin"))
-                .AddPolicy("RequireAdministratorsRole", policy => policy.RequireRole("SuperAdmin", "Administrator"));
+                .AddPolicy(
+                "RequireSuperAdminRole",
+                policy => policy.RequireRole("SuperAdmin"))
+                .AddPolicy(
+                "RequireAdministratorsRole",
+                policy => policy.RequireRole("SuperAdmin", "Administrator"));
 
             ConfigureCookie(services);
 
@@ -112,7 +116,6 @@ namespace ProjectMovie
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
         }
 
         public static void SeedDatabase(WebApplication app)
