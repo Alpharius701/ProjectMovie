@@ -82,15 +82,28 @@ namespace ProjectMovie.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoginWith2fa(bool rememberMe)
+        public async Task<IActionResult> LoginWith2fa(
+            bool rememberMe,
+            string? returnUrl = null)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new InvalidOperationException("Unable to load two-factor authentication user.");
             }
 
-            return View(new LoginWith2faViewModel { RememberMe = rememberMe });
+            LoginWith2faViewModel model = new()
+            {
+                RememberMe = rememberMe,
+                ReturnUrl = returnUrl
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -145,7 +158,7 @@ namespace ProjectMovie.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoginWithRecoveryCode()
+        public async Task<IActionResult> LoginWithRecoveryCode(string? returnUrl = null)
         {
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
@@ -153,7 +166,12 @@ namespace ProjectMovie.Controllers
                 throw new InvalidOperationException("Unable to load two-factor authentication user.");
             }
 
-            return View();
+            LoginWithRecoveryCodeViewModel model = new()
+            {
+                ReturnUrl = returnUrl
+            };
+
+            return View(model);
         }
 
         [HttpPost]

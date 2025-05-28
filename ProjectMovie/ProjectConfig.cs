@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using MvcMovie.Models;
+using ProjectMovie.Models;
 using ProjectMovie.Data;
 using ProjectMovie.Services;
 

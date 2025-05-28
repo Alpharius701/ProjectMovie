@@ -13,7 +13,14 @@
             <input asp-for="RememberMe" type="hidden" />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
-                <input asp-for="TwoFactorCode" class="form-control" autocomplete="off" />
+                <input asp-for="TwoFactorCode"
+                       class="form-control"
+                       autocomplete="off"
+                       inputmode="numeric"
+                       pattern="^[0-9]{6}$"
+                       maxlength="6"
+                       required
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);" />
                 <label asp-for="TwoFactorCode" class="form-label"></label>
                 <span asp-validation-for="TwoFactorCode" class="text-danger"></span>
             </div>
@@ -31,7 +38,10 @@
 </div>
 <p>
     Don't have access to your authenticator device? You can
-    <a id="recovery-code-login" asp-controller="Account" asp-action="LoginWithRecoveryCode">log in with a recovery code</a>.
+    <a id="recovery-code-login"
+       asp-controller="Account"
+       asp-action="LoginWithRecoveryCode"
+       asp-route-returnUrl="@Model.ReturnUrl">log in with a recovery code</a>.
 </p>
 
 @section Scripts {

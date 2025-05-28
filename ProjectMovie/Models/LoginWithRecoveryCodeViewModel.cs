@@ -8,5 +8,7 @@ namespace ProjectMovie.Models
         [DataType(DataType.Text)]
         [Display(Name = "Recovery Code")]
         public string? RecoveryCode { get; set; }
+
+        public string? ReturnUrl { get; set; }
     }
 }

@@ -389,8 +389,7 @@ namespace ProjectMovie.Controllers
                 {
                     RecoveryCodes = recoveryCodes?.ToArray()
                 };
-                ViewData["RecoveryCodes"] = showRecoveryCodesViewModel.RecoveryCodes;
-                return RedirectToAction("ShowRecoveryCodes");
+                return RedirectToAction("ShowRecoveryCodes", showRecoveryCodesViewModel);
             }
             else
             {
@@ -486,13 +485,12 @@ namespace ProjectMovie.Controllers
             {
                 RecoveryCodes = recoveryCodes?.ToArray()
             };
-            ViewData["RecoveryCodes"] = model.RecoveryCodes;
 
             _logger.LogInformation(
                 "User with ID '{UserId}' has generated new 2FA recovery codes.",
                 userId);
             ViewData["StatusMessage"] = "You have generated new recovery codes.";
-            return RedirectToAction("ShowRecoveryCodes");
+            return RedirectToAction("ShowRecoveryCodes", model);
         }
 
         [HttpGet]
