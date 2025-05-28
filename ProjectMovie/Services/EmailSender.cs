@@ -7,12 +7,21 @@ namespace ProjectMovie.Services
 {
     public class EmailSender : IEmailSender
     {
+        const string Mail = "projectmoviewebapp@gmail.com";
+        const string Password = "noea bzby mbzs chny";
+        const string Host = "smtp.gmail.com";
+        const int Port = 587;
+
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            const string Mail = "ProjectMovieWebApp@outlook.com";
-            const string Password = "zuoeggdwwegiosgv";
-            const string Host = "smtp.office365.com";
-            const int Port = 587;
+            var message = new MailMessage
+            {
+                From = new MailAddress(Mail, "ProjectMovie"),
+                To = { email },
+                Subject = subject,
+                Body = htmlMessage,
+                IsBodyHtml = true
+            };
 
             SmtpClient client = new(Host, Port)
             {
@@ -21,11 +30,7 @@ namespace ProjectMovie.Services
                 Credentials = new NetworkCredential(Mail, Password)
             };
 
-            return client.SendMailAsync(
-                new MailMessage(from: Mail,
-                                to: email,
-                                subject: subject,
-                                body: htmlMessage));
+            return client.SendMailAsync(message);
         }
     }
 }
