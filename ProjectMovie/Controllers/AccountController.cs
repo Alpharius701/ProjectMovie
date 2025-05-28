@@ -21,17 +21,20 @@ namespace ProjectMovie.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IEmailSender _emailSender;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<AccountController> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
@@ -235,6 +238,13 @@ namespace ProjectMovie.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // Присваиваем роль "User" новому пользователю
+                    if (!await _roleManager.RoleExistsAsync(nameof(UserRoles.User)))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(nameof(UserRoles.User)));
+                    }
+                    await _userManager.AddToRoleAsync(user, nameof(UserRoles.User));
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 ProjectConfig.ConfigureServices(builder);
 
 var app = builder.Build();
-ProjectConfig.SeedDatabase(app);
+await ProjectConfig.SeedDatabaseAsync(app);
 ProjectConfig.ConigureMiddleware(app);
 
 await app.RunAsync();

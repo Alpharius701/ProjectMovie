@@ -118,13 +118,13 @@ namespace ProjectMovie
                 pattern: "{controller=Home}/{action=Index}/{id?}");
         }
 
-        public static void SeedDatabase(WebApplication app)
+        public static async Task SeedDatabaseAsync(WebApplication app)
         {
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
 
-                SeedData.Initialize(services);
+                await SeedData.InitializeAsync(services);
             }
         }
     }
