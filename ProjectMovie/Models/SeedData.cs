@@ -23,7 +23,6 @@ namespace ProjectMovie.Models
             await FixUsersWithoutRolesAsync(serviceProvider);
         }
 
-
         private static async Task SeedUsersRolesAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -89,7 +88,6 @@ namespace ProjectMovie.Models
 
         private static async Task<List<IdentityUser>> GetUsersWithoutRolesAsync(IServiceProvider serviceProvider)
         {
-
             var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var users = await userManager.Users.ToListAsync();
             var usersWithoutRoles = new List<IdentityUser>();
@@ -108,7 +106,7 @@ namespace ProjectMovie.Models
 
         private static async Task SeedMoviesDataAsync(IServiceProvider serviceProvider)
         {
-            using var context = new ProjectMovieContext(
+            await using var context = new ProjectMovieContext(
                 serviceProvider.GetRequiredService<
                     DbContextOptions<ProjectMovieContext>>());
             // Look for any movies.

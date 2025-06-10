@@ -152,6 +152,11 @@ namespace ProjectMovie.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePersonalData(DeletePersonalDataViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -159,20 +164,18 @@ namespace ProjectMovie.Controllers
             }
 
             var requirePassword = await _userManager.HasPasswordAsync(user);
-            if (requirePassword)
+            if (requirePassword
+                && !await _userManager.CheckPasswordAsync(user, model?.Password!))
             {
-                if (!await _userManager.CheckPasswordAsync(user, model?.Password!))
-                {
-                    ModelState.AddModelError(string.Empty, "Incorrect password.");
-                    return View(model);
-                }
+                ModelState.AddModelError(string.Empty, "Incorrect password.");
+                return View(model);
             }
 
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Unexpected error occurred deleting user.");
+                throw new InvalidOperationException("Unexpected error occurred deleting user.");
             }
 
             await _signInManager.SignOutAsync();
@@ -193,7 +196,7 @@ namespace ProjectMovie.Controllers
 
             if (!await _userManager.GetTwoFactorEnabledAsync(user))
             {
-                throw new InvalidOperationException($"Cannot disable 2FA for user as it's not currently enabled.");
+                throw new InvalidOperationException("Cannot disable 2FA for user as it's not currently enabled.");
             }
 
             return View();
@@ -212,7 +215,7 @@ namespace ProjectMovie.Controllers
             var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
             {
-                throw new InvalidOperationException($"Unexpected error occurred disabling 2FA.");
+                throw new InvalidOperationException("Unexpected error occurred disabling 2FA.");
             }
 
             _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
@@ -380,21 +383,14 @@ namespace ProjectMovie.Controllers
 
             ViewData["StatusMessage"] = "Your authenticator app has been verified.";
 
-            if (await _userManager.CountRecoveryCodesAsync(user) == 0)
+            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(
+                user,
+                10);
+            var showRecoveryCodesViewModel = new ShowRecoveryCodesViewModel
             {
-                var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(
-                    user,
-                    10);
-                var showRecoveryCodesViewModel = new ShowRecoveryCodesViewModel
-                {
-                    RecoveryCodes = recoveryCodes?.ToArray()
-                };
-                return RedirectToAction("ShowRecoveryCodes", showRecoveryCodesViewModel);
-            }
-            else
-            {
-                return RedirectToAction("TwoFactorAuthentication");
-            }
+                RecoveryCodes = recoveryCodes?.ToArray()
+            };
+            return RedirectToAction("ShowRecoveryCodes", showRecoveryCodesViewModel);
         }
 
         private async Task LoadSharedKeyAndQrCodeUriAsync(
