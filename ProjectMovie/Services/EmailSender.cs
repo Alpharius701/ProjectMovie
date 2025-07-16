@@ -7,8 +7,8 @@ namespace ProjectMovie.Services
 {
     public class EmailSender : IEmailSender
     {
-        const string Mail = "projectmoviewebapp@gmail.com";
-        const string Password = "noea bzby mbzs chny";
+        const string Mail = "proj#######.com";
+        const string Password = "###########";
         const string Host = "smtp.gmail.com";
         const int Port = 587;
 
