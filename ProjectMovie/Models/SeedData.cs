@@ -12,8 +12,8 @@ namespace ProjectMovie.Models
 {
     public static class SeedData
     {
-        const string SuperAdminEmail = "projectmoviewebapp@gmail.com";
-        const string SuperAdminPassword = "Test_pass13579";
+        const string SuperAdminEmail = "№№№№№№№№";
+        const string SuperAdminPassword = "№№№№№№№№№№";
 
         public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
